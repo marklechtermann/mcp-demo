@@ -1,0 +1,44 @@
+name: release
+
+# Build and publish a self-contained, single-file win-x64 executable and attach
+# it to the GitHub Release. Triggered only when a Release is published. The
+# integration tests are intentionally NOT run here: they require a local,
+# running ControlDesk instance and are executed locally on Windows only.
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore src/DSpace.ControlDesk.Mcp/DSpace.ControlDesk.Mcp.csproj
+
+      - name: Publish self-contained single-file win-x64
+        run: >
+          dotnet publish src/DSpace.ControlDesk.Mcp/DSpace.ControlDesk.Mcp.csproj
+          -c Release
+          -r win-x64
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true
+          -o publish
+
+      - name: Upload executable to the GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: publish/dspace-controldesk-mcp.exe
