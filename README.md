@@ -10,6 +10,8 @@ and experiments, manage layouts, and add/inspect instruments programmatically.
 - **Platform:** **Windows only**, **win-x64** (ControlDesk COM automation
   requires a 64-bit client)
 
+Download the latest release from [GitHub](https://github.com/marklechtermann/mcp-demo/releases).
+
 ## Tools
 
 | Tool | Description | Annotations |
@@ -103,41 +105,6 @@ During development you can instead use:
 
 ## Tests
 
-The tests in `tests/DSpace.ControlDesk.Mcp.Tests` are **integration tests**:
-they start the MCP server over stdio and drive a **real, running ControlDesk
-instance** via COM. They run on **Windows only**.
-
 ```powershell
 dotnet test
 ```
-
-Tests that require ControlDesk are skipped automatically when the
-`ControlDeskNG.Application` COM server is not registered. Each integration test
-creates its own project in a temporary project root and **deletes it again**
-(via the `delete_project` tool) in a `finally` block, so repeated runs stay
-isolated and leave no artifacts behind.
-
-## Release
-
-Releases are produced by the GitHub Actions workflow in
-[.github/workflows/release.yml](.github/workflows/release.yml). It is triggered
-**only when a GitHub Release is published**, does **not** run the tests (they
-require a local ControlDesk instance), and publishes a **self-contained,
-single-file win-x64 executable** that bundles the .NET 10 runtime. The
-executable is attached to the GitHub Release as a downloadable asset.
-
-## Project layout
-
-```
-src/DSpace.ControlDesk.Mcp/          MCP server
-  Program.cs                         Host + stdio transport wiring
-  ControlDesk/                       COM automation layer (late-bound dynamic, STA dispatcher)
-  Tools/                             MCP tool definitions (7 tools)
-  Models/                            Typed result records
-tests/DSpace.ControlDesk.Mcp.Tests/  Integration tests (stdio MCP client + real ControlDesk)
-.github/workflows/release.yml        Release pipeline
-docs/IMPLEMENTATION_NOTES.md         Sources and design decisions
-```
-
-See [docs/IMPLEMENTATION_NOTES.md](docs/IMPLEMENTATION_NOTES.md) for the
-conventions and API references this implementation relies on.
