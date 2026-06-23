@@ -1,4 +1,4 @@
-# dSPACE ControlDesk MCP Server
+# It's a temporary demo 
 
 A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that
 automates [dSPACE ControlDesk](https://www.dspace.com/en/pub/home/products/sw/experimentandvisualization/controldesk.cfm)
